@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.Scene?>
+<?import javafx.scene.text.Text?>
+<?import mod.view.MapCanvas?>
+<Scene
+        xmlns:fx="https://javafx.com/fxml"
+        xmlns="http://javafx.com/javafx"
+        fx:id="scene"
+        fx:controller="mod.core.Controller"
+        stylesheets="@../style/style.css"
+>
+    <BorderPane>
+        <top>
+            <MenuBar fx:id="menuBar">
+                <Menu text="File" fx:id="fileMenu">
+                    <MenuItem text="Use default binary" onAction="#useDefaultBinary"/>
+                    <MenuItem text="Create binary" onAction="#createBinaryAction"/>
+                    <MenuItem text="Load binary" onAction="#loadBinaryAction" />
+                </Menu>
+                <Menu text="Debug">
+                    <MenuItem
+                            fx:id="debugPanelMenuButton"
+                            text="Open debug panel"
+                            onAction="#openDebugWindow"
+                    />
+                </Menu>
+                <Menu text="View">
+                    <MenuItem
+                            fx:id="openPOIMenu"
+                            text="Show POI"
+                            onAction="#openPOIWindow"
+                    />
+                </Menu>
+            </MenuBar>
+        </top>
+        <left>
+            <VBox>
+                <padding>
+                    <Insets top="10" bottom="10" left="10" right="10"/>
+                </padding>
+                <GridPane fx:id="searchGridPane" alignment="CENTER_LEFT" hgap="10" vgap="10" prefWidth="250">
+                    <Text
+                            text="Lookup"
+                            styleClass="header"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="0"
+                    />
+                    <TextField
+                            fx:id="searchBarLookup"
+                            promptText="Lookup an address"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="1"
+                            onKeyTyped="#getLookupCompletions"
+                            minWidth="250"
+                    />
+                    <ListView
+                            fx:id="autocompleteListView"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="3"
+                            onMouseClicked="#onAutocompleteClicked"
+                            visible="false"
+                            managed="false"
+                            maxHeight="100"
+                    />
+                    <HBox
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="2"
+                    >
+                        <Button
+                                fx:id="searchLookupButton"
+                                text="Search"
+                                HBox.hgrow="ALWAYS"
+                                maxWidth="Infinity"
+                                onMouseClicked="#searchLookup"
+                        />
+                    </HBox>
+                    <Text
+                            text="Pathfinding"
+                            styleClass="header"
+                            textAlignment="CENTER"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="4"
+                    />
+                    <TextField
+                            fx:id="searchBarFrom"
+                            promptText="From..."
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="5"
+                            onKeyTyped="#getLookupCompletions"
+                    />
+                    <TextField
+                            fx:id="searchBarTo"
+                            promptText="To..."
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="6"
+                            onKeyTyped="#getLookupCompletions"
+                    />
+                    <Label
+                            text="Select transport type"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="7"
+                    />
+                    <ComboBox
+                            fx:id="transportMenu"
+                            value="Car"
+                            maxWidth="Infinity"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="8"
+                    />
+                    <Button
+                            fx:id="searchFindRouteButton"
+                            text="Find route"
+                            HBox.hgrow="ALWAYS"
+                            maxWidth="Infinity"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="9"
+                            onMouseClicked="#searchFindRoute"
+                    />
+                    <Label
+                            text="Select theme:"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="10"
+                    />
+                    <ComboBox
+                            fx:id="themeMenu"
+                            value="Default mode"
+                            maxWidth="Infinity"
+                            GridPane.columnIndex="0"
+                            GridPane.rowIndex="11"
+                    />
+                </GridPane>
+            </VBox>
+        </left>
+        <center>
+            <StackPane>
+                <MapCanvas
+                        fx:id="canvas"
+                        width="800"
+                        height="600"
+                        onMouseMoved="#onMouseMoved"
+                        onMouseDragged="#onMouseDragged"
+                        onMousePressed="#onMousePressed"
+                        onScroll="#onScroll"
+                />
+                <VBox minWidth="20" minHeight="200" fx:id="debugViewBox" visible="false" StackPane.alignment="TOP_RIGHT">
+                    <Text text="Debug menu" styleClass="debugHeader"/>
+                    <Label fx:id="coordsLabel" text="not initialized"/>
+                    <CheckBox text="Enable KD-view" fx:id="kdViewCheckBox" onAction="#toggleKDView"/>
+                    <CheckBox text="Enable heuristics view" fx:id="heuristicViewCheckBox" onAction="#toggleHeuristicView"/>                </VBox>
+                <VBox minWidth="50" minHeight="200" fx:id="POIViewBox" visible="false" StackPane.alignment="CENTER_RIGHT">
+                    <Text text="POI Menu" styleClass="debugHeader"/>
+                </VBox>
+                <VBox maxHeight="100" maxWidth="100" fx:id="routeViewBox" visible="false"  StackPane.alignment="TOP_LEFT">
+                    <Text text="Loading route.." styleClass="debugHeader"/>
+                    <ProgressBar progress="-1" />
+                </VBox>
+            </StackPane>
+        </center>
+    </BorderPane>
+</Scene>

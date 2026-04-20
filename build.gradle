@@ -1,0 +1,77 @@
+plugins {
+  id 'java'
+  id 'jacoco'
+  id 'application'
+  id 'org.openjfx.javafxplugin' version '0.0.13'
+}
+
+version '1.0-SNAPSHOT'
+
+repositories {
+  mavenCentral()
+}
+
+jar {
+  manifest {
+    attributes 'Main-Class': "mod.Launcher"
+  }
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  from {
+    configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+}
+
+sourceSets {
+  main {
+    java {
+      srcDirs = ["src/main/java"]
+    }
+    resources {
+      srcDirs = ["src/main/resources"]
+    }
+  }
+}
+
+application {
+  mainClass = 'mod.Launcher'
+}
+
+dependencies {
+  // Compression
+  implementation("org.apache.commons:commons-compress:1.26.1")
+
+  // Osmosis
+  implementation files("lib/jars/osmosis-core-0.49.2.jar")
+  implementation files("lib/jars/osmosis-pbf2-0.49.2.jar")
+  implementation files("lib/jars/osmosis-xml-0.49.2.jar")
+
+  // JUnit
+  testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.0")
+  testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.0")
+
+  // JavaFX
+  implementation("org.openjfx:javafx-controls:19.0.2")
+}
+
+javafx {
+  version = '19.0.2'
+  modules = ['javafx.controls', 'javafx.fxml']
+}
+
+
+test {
+  useJUnitPlatform()
+  finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+  dependsOn test
+}
+
+tasks.withType(JavaCompile).configureEach {
+  options.encoding = 'UTF-8'
+}
+
+tasks.withType(JavaExec).configureEach {
+  jvmArgs = ['-Xms4g', '-Xmx10g']
+}
